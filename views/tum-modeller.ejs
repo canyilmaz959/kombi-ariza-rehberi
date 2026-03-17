@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tüm Kombi Modelleri</title>
+</head>
+<body>
+
+    <h1>Tüm Kombi Modelleri</h1>
+
+    <ul>
+        <% if(modeller.length === 0){ %>
+            <li>Henüz model eklenmemiş.</li>
+        <% } %>
+        <% modeller.forEach(function(model){ %>
+            <li>
+                <a href="/markalar/<%= model.marka.slug %>/modeller/<%= model.slug %>">
+                    <%= model.name %> (<%= model.marka ? model.marka.name : "Genel" %>)
+                </a>
+            </li>
+        <% }) %>
+
+    </ul>
+</body>
+</html>

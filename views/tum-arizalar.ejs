@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tüm Kombi Arızaları</title>
+</head>
+<body>
+
+    <h1>Tüm Kombi Arızaları</h1>
+
+    <ul>
+        <% if(arizalar.length === 0){ %>
+            <li>Henüz arıza eklenmemiş.</li>
+        <% } %>
+        <% arizalar.forEach(function(ariza){ %>
+            <li>
+                <a href="/arizalar/<%= ariza._id %>">
+                    <%= ariza.kod %> - <%= ariza.baslik %> (<%= ariza.marka ? ariza.marka.name : "Genel" %> - <%= ariza.model ? ariza.model.name : "Genel" %>)
+                </a>
+            </li>
+        <% }) %>
+
+    </ul>
+
+</body>
+</html>

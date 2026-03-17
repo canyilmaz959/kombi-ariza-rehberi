@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kombi Markaları</title>
+</head>
+<body>
+
+    <h1>Tüm Kombi Markaları</h1>
+
+    <ul>
+        <% if(markalar.length === 0){ %>
+            <li>Henüz marka eklenmemiş.</li>
+        <% } %>
+
+        <% markalar.forEach(function(marka){ %>
+            <li>
+                <a href="/markalar/<%= marka.slug %>">
+                    <%= marka.name.toUpperCase() %>
+                </a>
+            </li>
+        <% }) %>
+ 
+
+</body>
+</html>

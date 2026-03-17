@@ -144,13 +144,25 @@ router.get("/markalar/:markaslug/:modelslug/:kod", async (req, res) => {
 
     const marka  = await Marka.findOne({ slug: req.params.markaslug });
 
-    const arizalar = await Ariza.findOne({ 
+    if (!marka) {
+        return res.status(404).send("Marka bulunamadı.");
+    }
+
+    const model = await Model.findOne({ slug: req.params.modelslug, marka: marka._id });
+
+    if (!model) {
+        return res.status(404).send("Model bulunamadı.");
+    }
+
+    const ariza = await Ariza.findOne({ 
         kod: req.params.kod, 
-        marka: marka._id })
-        .populate(["marka", "model", "kod"]);
+        marka: marka._id,
+        model: model._id })
+        .populate("marka")
+        .populate("model");
 
 
-        res.render("ariza-detay", { ariza: arizalar });
+        res.render("ariza-detay", { ariza });
         
 });
 
@@ -264,6 +276,72 @@ router.get("/admin-logout", (req, res) => {
             res.redirect("/admin-login");
         }
     });
+});
+
+
+
+//arama işlemi
+router.get("/tum-markalar", async (req, res) => {
+    const markalar = await Marka.find().sort({ name: 1 });
+    res.render("tum-markalar", { markalar });
+});
+
+router.get("/tum-modeller", async (req, res) => {
+    const modeller = await Model.find().populate("marka").sort({ name: 1 });
+    res.render("tum-modeller", { modeller });
+});
+
+router.get("/tum-arizalar", async (req, res) => {
+    const arizalar = await Ariza.find().populate("marka").populate("model").sort({ kod: 1 });
+    res.render("tum-arizalar", { arizalar });
+});
+
+router.get("/arama", async (req, res) => {
+    const q = req.query.q;
+
+    if (!q || q.trim() === "") {
+            return res.redirect("/");
+        }
+
+    const dizi = ["hatalar", "hata kodları", "hata kodu", "arızalar", "ariza kodları", "ariza kodu", "kodlar", "kod", "hata", "ariza"];
+    
+    const temizq = q.trim().toLowerCase();
+
+    try{    
+        //özel arama
+        if(temizq == "markalar"){
+            res.redirect("/tum-markalar");
+            return;
+        }else if(temizq == "modeller"){
+            res.redirect("/tum-modeller");
+            return;
+        }else if(dizi.includes(temizq)){
+            res.redirect("./tum-arizalar");
+            return;
+        }
+
+
+
+
+        //genel arama
+        const arizalar = await Ariza.find({
+            $or: [
+                { kod : new RegExp(temizq, "i") },
+                { baslik : new RegExp(temizq, "i") },
+                { aciklama : new RegExp(temizq, "i") },
+                { cozum : new RegExp(temizq, "i") }
+                
+            ]
+        }).populate("marka").populate("model");
+
+        const markalar = await Marka.find({ name: new RegExp(temizq, "i") });
+        const modeller = await Model.find({ name: new RegExp(temizq, "i") }).populate("marka");
+
+        res.render("arama-sonuc", { arizalar, markalar, modeller, q });
+    }catch(err){
+        console.error("Arama hatası:", err);
+        res.send("Arama yapılırken bir hata oluştu.");
+    }
 });
 
 

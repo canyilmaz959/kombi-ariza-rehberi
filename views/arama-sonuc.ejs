@@ -1,0 +1,23 @@
+<h1>"<%= q %>" için sonuçlar</h1>
+
+<% if(arizalar.length === 0 && markalar.length === 0 && modeller.length === 0) { %>
+    <p>Sonuç bulunamadı.</p>
+<% } %>
+
+<% arizalar.forEach(ariza => { %>
+    <div>
+        <h3><%= ariza.kod %> - <%= ariza.model.name %></h3>
+        <p><%= ariza.baslik %></p>
+    </div>
+
+<% }); %>
+<% markalar.forEach(marka => { %>
+    <div>
+        <h3><a href="/markalar/<%= marka.slug %>"><%= marka.name %></a></h3>
+    </div>
+<% }); %>
+<% modeller.forEach(model => { %>
+    <div>
+        <h3><a href="/markalar/<%= model.marka.slug %>/<%= model.slug %>"><%= model.name %></a></h3>
+    </div>
+<% }); %>
