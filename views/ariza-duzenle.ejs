@@ -1,0 +1,24 @@
+<h1>Arıza Düzenle</h1>
+
+<form action="/admin/ariza-duzenle/<%= ariza._id %>" method="POST">
+
+    <h2><%= ariza.kod %> kodu düzenleme sayfası.</h2>
+
+<strong>Başlık:</strong>
+<input type="text" name="baslik" value="<%= ariza.baslik %>">
+
+<strong>Açıklama:</strong>
+<textarea name="aciklama"><%= ariza.aciklama %></textarea>
+
+<strong>Çözüm:</strong>
+<textarea name="cozum"><%= ariza.cozum %></textarea>
+
+<button type="submit">Kaydet</button>
+<button><a href="/admin/admin-arizalar">Geri Dön</a></button>
+<button><a href="/admin/">Admin Paneli</a></button>
+<button><a href="/">Ana Sayfa</a></button>
+
+</form>
+
+
+

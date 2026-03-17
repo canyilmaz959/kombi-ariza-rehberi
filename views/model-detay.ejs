@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= marka.name %> <%= model.name %> Hata Kodları ve Çözümleri</title>
+</head>
+<body>
+
+<h1><%= marka.name %> <%= model.name %> Hata Kodları</h1>
+
+<ul>
+  <% if(arizalar.length === 0){ %>
+    <li>Bu model için henüz arıza kodları eklenmemiş.</li>
+  <% } %>
+
+  <% arizalar.forEach(function(ariza){ %>
+    <li>
+        <a href="/markalar/<%= marka.slug %>/<%= model.slug %>/<%= ariza.kod %>">
+          <%= ariza.kod %>
+        </a>
+    </li>
+  <% }) %>
+</ul>
+
+<a href="/">← Ana Sayfaya Dön</a>
+
+</body>
+</html>

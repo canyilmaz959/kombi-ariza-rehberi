@@ -1,0 +1,26 @@
+<h1>Arızalar</h1>
+
+<% if (arizalar.length === 0) { %>
+    <p>Henüz arıza eklenmedi.</p>
+<% } %>
+<ul>
+
+<% arizalar.forEach(function(ariza){ %>
+    <li>
+        <%= ariza.marka.name %> 
+        <%= ariza.model.name %> 
+        <%= ariza.kod %>
+
+        <button><a href="/admin/ariza-duzenle/<%= ariza._id %>">Düzenle</a></button>
+        <form action="/admin/admin-arizalar/<%= ariza._id %>" method="POST" style="display:inline;">
+            <input type="hidden" name="arizaId" value="<%= ariza._id %>">
+            <button type="submit">Sil</button>
+        </form>
+
+    </li>
+<% }) %>
+
+<button><a href="/admin/">Geri Dön</a></button>
+<button><a href="/">Ana Sayfa</a></button>
+
+</ul>

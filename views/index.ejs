@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kombi Hata Kodları ve Çözümleri | Tüm Markalar</title>
+</head>
+<body>
+
+<h1>Tüm Kombi Markaları İçin Hata Kodları Rehberi</h1><br><br>
+<h2>Kombi Markaları</h2>
+
+<ul>
+  <% if(markalar.length === 0){ %>
+    <li>Henüz marka eklenmemiş.</li>
+  <% } %>
+
+  <% markalar.forEach(function(marka){ %>
+    <li>
+      <a href="/markalar/<%= marka.slug %>">
+        <%= marka.name.toUpperCase() %>
+      </a>
+    </li>
+  <% }) %>
+</ul>
+
+</body>
+</html>

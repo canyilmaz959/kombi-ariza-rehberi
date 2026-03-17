@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="description" content="<%= ariza.marka.name %> <%= ariza.kod %> hatası nedir? <%= ariza.marka.name %> <%= ariza.kod %> arızası nasıl çözülür? <%= ariza.aciklama ? ariza.aciklama.substring(0, 150) : 'bu hata kodunun çözümü ve nedenlerini öğrenin.' %> ">
+  <title><%= ariza.marka.name %> <%= ariza.model.name %> <%= ariza.kod %> Hata Kodu Çözümü ve Sebepleri</title>
+</head>
+<body>
+<h1><%= ariza.marka.name %> <%= ariza.model.name %> <%= ariza.kod %> Hata Kodu Nedir?</h1>
+
+<ul>
+  <% if (ariza.baslik && ariza.baslik.trim() !== '') { %>
+      <li><strong>Başlık:</strong> <%= ariza.baslik %></li>
+  <% } else { %>
+      <li><strong>Başlık:</strong> Bu arıza kodu için başlık bilgisi eklenmemiş.</li>
+  <% } %>
+
+  <% if (ariza.aciklama && ariza.aciklama.trim() !== '') { %>
+      <li><strong>Açıklama:</strong> <%= ariza.aciklama %></li>
+  <% } else { %>
+      <li><strong>Açıklama:</strong> Bu arıza kodu için açıklama bilgisi eklenmemiş.</li>
+  <% } %>
+
+  <% if (ariza.cozum && ariza.cozum.trim() !== '') { %>
+      <li><strong>Çözüm:</strong> <%= ariza.cozum %></li>
+  <% } else { %>
+      <li><strong>Çözüm:</strong> Bu arıza kodu için çözüm bilgisi eklenmemiş.</li>
+  <% } %>
+</ul>
+
+<a href="/">← Ana Sayfaya Dön</a>
+
+</body>
+</html>

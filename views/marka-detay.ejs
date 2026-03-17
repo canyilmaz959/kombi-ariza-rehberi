@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= marka.name %> Kombi Modelleri, Hata Kodları ve Çözümleri</title>
+</head>
+<body>
+
+<h1><%= marka.name %> Kombi Modelleri</h1>
+
+<ul>
+  <% if(modeller.length === 0){ %>
+    <li>Bu markaya ait model henüz eklenmemiş.</li>
+  <% } %>
+
+  <% modeller.forEach(function(model){ %>
+    <li>
+      <a href="/markalar/<%= marka.slug %>/<%= model.slug %>">
+        <%= model.name %>
+      </a>
+    </li>
+  <% }) %>
+</ul>
+
+<a href="/">← Ana Sayfaya Dön</a>
+
+</body>
+</html>
