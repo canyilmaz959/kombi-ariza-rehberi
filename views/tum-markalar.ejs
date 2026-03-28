@@ -19,6 +19,27 @@
                 </a>
             </li>
         <% }) %>
+    </ul>
+
+    <% if (toplamSayfa > 1) { %>
+  <div>
+    <% if (mevcutSayfa > 1) { %>
+      <a href="?sayfa=<%= mevcutSayfa - 1 %>">← Önceki</a>
+    <% } %>
+
+    <% for (let i = 1; i <= toplamSayfa; i++) { %>
+      <% if (i === mevcutSayfa) { %>
+        <strong>[<%= i %>]</strong>
+      <% } else { %>
+        <a href="?sayfa=<%= i %>"><%= i %></a>
+      <% } %>
+    <% } %>
+
+    <% if (mevcutSayfa < toplamSayfa) { %>
+      <a href="?sayfa=<%= mevcutSayfa + 1 %>">Sonraki →</a>
+    <% } %>
+  </div>
+<% } %>
  
 
 </body>

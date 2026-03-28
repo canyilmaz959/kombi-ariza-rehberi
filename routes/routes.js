@@ -282,18 +282,47 @@ router.get("/admin-logout", (req, res) => {
 
 //arama işlemi
 router.get("/tum-markalar", async (req, res) => {
-    const markalar = await Marka.find().sort({ name: 1 });
-    res.render("tum-markalar", { markalar });
+    const mevcutSayfa = parseInt(req.query.sayfa) || 1;
+    const limit = 10;
+    const skip = (mevcutSayfa - 1) * limit;
+    const toplam = await Marka.countDocuments();
+    const toplamSayfa = Math.ceil(toplam / limit);
+    const markalar = await Marka.find()
+    .sort({ name: 1 })
+    .skip(skip)
+    .limit(limit);
+    res.render("tum-markalar", { markalar, mevcutSayfa, limit, toplamSayfa });
 });
 
 router.get("/tum-modeller", async (req, res) => {
-    const modeller = await Model.find().populate("marka").sort({ name: 1 });
-    res.render("tum-modeller", { modeller });
+    const mevcutSayfa = parseInt(req.query.sayfa) || 1;
+    const limit = 10;
+    const skip = (mevcutSayfa - 1) * limit;
+
+    const toplam = await Model.countDocuments();
+    const toplamSayfa = Math.ceil(toplam / limit);
+
+    const modeller = await Model.find()
+    .populate("marka")
+    .sort({ name: 1 })
+    .skip(skip)
+    .limit(limit);
+    res.render("tum-modeller", { modeller, mevcutSayfa, limit, toplamSayfa });
 });
 
 router.get("/tum-arizalar", async (req, res) => {
-    const arizalar = await Ariza.find().populate("marka").populate("model").sort({ kod: 1 });
-    res.render("tum-arizalar", { arizalar });
+    const mevcutSayfa = parseInt(req.query.sayfa) || 1;
+    const limit = 10;
+    const skip = (mevcutSayfa - 1) * limit;
+    const toplam = await Ariza.countDocuments();
+    const toplamSayfa = Math.ceil(toplam / limit);
+    const arizalar = await Ariza.find()
+    .populate("marka")
+    .populate("model")
+    .sort({ kod: 1 })
+    .skip(skip)
+    .limit(limit);
+    res.render("tum-arizalar", { arizalar, mevcutSayfa, limit, toplamSayfa });
 });
 
 router.get("/arama", async (req, res) => {
