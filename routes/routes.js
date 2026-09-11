@@ -2,7 +2,75 @@ const Ariza = require("../models/Ariza");
 const Marka = require("../models/Marka");
 const Model = require("../models/Model");
 const express = require('express');
+const crypto = require('crypto');
 const router = express.Router();
+
+const loginAttempts = new Map();
+const maxLoginAttempts = 5;
+const loginLockoutMs = 15 * 60 * 1000;
+
+function getLoginAttemptKey(req, user) {
+    return `${req.ip}:${user.trim().toLowerCase()}`;
+}
+
+function getLoginIpKey(req) {
+    return `ip:${req.ip}`;
+}
+
+function getLoginAttemptState(key) {
+    const state = loginAttempts.get(key);
+    if (!state) {
+        return { failures: 0, lockedUntil: 0 };
+    }
+
+    if (state.lockedUntil && state.lockedUntil <= Date.now()) {
+        loginAttempts.delete(key);
+        return { failures: 0, lockedUntil: 0 };
+    }
+
+    return state;
+}
+
+function clearExpiredLoginAttempts() {
+    const now = Date.now();
+    for (const [key, state] of loginAttempts) {
+        if (state.lockedUntil && state.lockedUntil <= now) {
+            loginAttempts.delete(key);
+        }
+    }
+}
+
+setInterval(clearExpiredLoginAttempts, loginLockoutMs).unref();
+
+function csrfProtection(req, res, next) {
+    if (!req.session.csrfToken) {
+        req.session.csrfToken = crypto.randomBytes(32).toString('hex');
+    }
+
+    res.locals.csrfToken = req.session.csrfToken;
+
+    if (req.method !== 'POST') {
+        return next();
+    }
+
+    const submittedToken = req.body && req.body._csrf;
+    const expectedToken = req.session.csrfToken;
+    const submittedBuffer = Buffer.from(typeof submittedToken === 'string' ? submittedToken : '');
+    const expectedBuffer = Buffer.from(expectedToken);
+
+    if (submittedBuffer.length !== expectedBuffer.length ||
+        !crypto.timingSafeEqual(submittedBuffer, expectedBuffer)) {
+        return res.status(403).send('Geçersiz CSRF token.');
+    }
+
+    next();
+}
+
+function escapeRegExp(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+router.use(csrfProtection);
 
 //admin paneli
 router.get("/admin",adminAuth, async (req, res) => {
@@ -249,13 +317,47 @@ router.get("/admin-login", (req, res) => {
 });
 
 router.post("/admin-login", (req, res) => {
-    const { user, pass } = req.body;
+    const body = req.body || {};
+    const user = typeof body.user === 'string' ? body.user : '';
+    const pass = typeof body.pass === 'string' ? body.pass : '';
+    const attemptKey = getLoginAttemptKey(req, user);
+    const ipAttemptKey = getLoginIpKey(req);
+    const attemptState = getLoginAttemptState(attemptKey);
+    const ipAttemptState = getLoginAttemptState(ipAttemptKey);
+    const lockedState = attemptState.lockedUntil > Date.now()
+        ? attemptState
+        : ipAttemptState;
+
+    if (lockedState.lockedUntil > Date.now()) {
+        const retryAfterSeconds = Math.ceil((lockedState.lockedUntil - Date.now()) / 1000);
+        res.set('Retry-After', retryAfterSeconds.toString());
+        return res.status(429).send('Çok fazla başarısız giriş denemesi. Daha sonra tekrar deneyin.');
+    }
 
     if(user === process.env.ADMIN_USER && pass === process.env.ADMIN_PASSWORD) {
-        req.session.isAdmin = true;
-        res.redirect("/admin");
+        loginAttempts.delete(attemptKey);
+        loginAttempts.delete(ipAttemptKey);
+        return req.session.regenerate(err => {
+            if (err) {
+                console.error("Oturum oluşturma hatası:", err);
+                return res.status(500).send('Giriş yapılırken bir hata oluştu.');
+            }
+
+            req.session.isAdmin = true;
+            res.redirect("/admin");
+        });
     } else {
-        res.send("Geçersiz kullanıcı adı veya şifre.");
+        attemptState.failures += 1;
+        ipAttemptState.failures += 1;
+        if (attemptState.failures >= maxLoginAttempts) {
+            attemptState.lockedUntil = Date.now() + loginLockoutMs;
+        }
+        if (ipAttemptState.failures >= maxLoginAttempts) {
+            ipAttemptState.lockedUntil = Date.now() + loginLockoutMs;
+        }
+        loginAttempts.set(attemptKey, attemptState);
+        loginAttempts.set(ipAttemptKey, ipAttemptState);
+        res.status(401).send("Geçersiz kullanıcı adı veya şifre.");
     }
 });
 
@@ -328,13 +430,14 @@ router.get("/tum-arizalar", async (req, res) => {
 router.get("/arama", async (req, res) => {
     const q = req.query.q;
 
-    if (!q || q.trim() === "") {
+    if (typeof q !== 'string' || q.length > 100 || q.trim() === "") {
             return res.redirect("/");
         }
 
     const dizi = ["hatalar", "hata kodları", "hata kodu", "arızalar", "ariza kodları", "ariza kodu", "kodlar", "kod", "hata", "ariza"];
     
     const temizq = q.trim().toLowerCase();
+    const aramaMetni = escapeRegExp(temizq);
 
     try{    
         //özel arama
@@ -355,16 +458,16 @@ router.get("/arama", async (req, res) => {
         //genel arama
         const arizalar = await Ariza.find({
             $or: [
-                { kod : new RegExp(temizq, "i") },
-                { baslik : new RegExp(temizq, "i") },
-                { aciklama : new RegExp(temizq, "i") },
-                { cozum : new RegExp(temizq, "i") }
+                { kod : new RegExp(aramaMetni, "i") },
+                { baslik : new RegExp(aramaMetni, "i") },
+                { aciklama : new RegExp(aramaMetni, "i") },
+                { cozum : new RegExp(aramaMetni, "i") }
                 
             ]
         }).populate("marka").populate("model");
 
-        const markalar = await Marka.find({ name: new RegExp(temizq, "i") });
-        const modeller = await Model.find({ name: new RegExp(temizq, "i") }).populate("marka");
+        const markalar = await Marka.find({ name: new RegExp(aramaMetni, "i") });
+        const modeller = await Model.find({ name: new RegExp(aramaMetni, "i") }).populate("marka");
 
         res.render("arama-sonuc", { arizalar, markalar, modeller, q });
     }catch(err){

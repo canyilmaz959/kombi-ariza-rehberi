@@ -1,0 +1,39 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo-data:/data/db
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --eval 'db.adminCommand({ ping: 1 }).ok' localhost:27017/test | grep 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: ariza-app
+    restart: unless-stopped
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      DB_URI: mongodb://mongodb:27017/ariza
+      SESSION_SECRET: ${SESSION_SECRET:?SESSION_SECRET .env dosyasinda tanimlanmali}
+      ADMIN_USER: ${ADMIN_USER:?ADMIN_USER .env dosyasinda tanimlanmali}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?ADMIN_PASSWORD .env dosyasinda tanimlanmali}
+      TRUST_PROXY: "false"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

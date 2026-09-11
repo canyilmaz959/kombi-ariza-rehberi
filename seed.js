@@ -14,83 +14,121 @@ require("dotenv").config({ path: "./.env" });
 const markaAdi = "DEMİRDÖKÜM"; // Marka adı (slug otomatik oluşturulacak)
 
 const modelListesi = [
-    "Vintomix P18/24-AS/1",
-    "Vintomix P24/28-AS/1"
+    "Isofast HK 35 (Hermetik)",
+    "Isofast C 28 (Hermetik)",
+    "Isofast C 35 (Hermetik)"
 ];
+
 // Hata kodları (sayfa 28-29-30'dan alındı)
 // Her kod tüm modeller için geçerlidir.
 const hatalar = [
     {
-        kod: "F.00",
-        baslik: "Gidiş Suyu Sıcaklık Sensörü Kesintisi",
-        aciklama: "Gidiş suyu NTC sensörü bağlı değil veya kablosu kopuk.",
-        cozum: "Sensör soketini ve kablo demetini kontrol edin. Gerekirse sensörü değiştirin."
+        kod: "F01, F04",
+        baslik: "Ateşleme ve İyonizasyon Arızası",
+        aciklama: "Kombinin ateşleme işlemini gerçekleştiremediğini veya alevin algılanmadığını belirten hata kodudur.",
+        cozum: "Dairenizdeki gaz akışını kontrol edin ve gaz vanalarının açık olduğundan emin olun. Kombiyi resetlemeyi deneyin; sorun devam ederse iyonizasyon elektrodu veya gaz valfi kontrolü için servis çağırılmalıdır."
     },
     {
-        kod: "F.01",
-        baslik: "Dönüş Suyu Sıcaklık Sensörü Kesintisi",
-        aciklama: "Dönüş suyu NTC sensörü bağlı değil veya kablosu kopuk.",
-        cozum: "Sensör bağlantılarını kontrol edin. Teknik müdahale için yetkili servise haber verin."
+        kod: "F02",
+        baslik: "Hava Akış Sorunu (Prosestat)",
+        aciklama: "Atık gaz tahliye sisteminde hava akışının sağlanamadığını gösterir. Genellikle prosestat arızasından kaynaklanır.",
+        cozum: "Kombinin baca bağlantılarını kontrol edin. Cihazı resetleyin. Sorun düzelmezse fan veya prosestat değişimi gerekebilir."
     },
     {
-        kod: "F.10 - F.11",
-        baslik: "Sıcaklık Sensörü Kısa Devre",
-        aciklama: "Gidiş veya dönüş NTC sensöründe kısa devre algılandı.",
-        cozum: "Sensör kablo demetini kontrol edin. Arızalı sensörün değişimini yapın."
+        kod: "F03",
+        baslik: "Tekrarlayan Hava Akış Hatası",
+        aciklama: "Hava akış sorununun kısa süre içerisinde (2-3 saat) tekrarladığını ve sistemin kendini emniyete aldığını belirtir.",
+        cozum: "Prosestat veya anakart üzerinde teknik bir arıza olabilir. Kalıcı çözüm için yetkili servis müdahalesi gerekmektedir."
     },
     {
-        kod: "F.20",
-        baslik: "Emniyet Sıcaklık Sınırlayıcısı Kapatması",
-        aciklama: "Cihaz aşırı ısındı. Gidiş suyu sıcaklığı emniyet limitini aştı.",
-        cozum: "Tesisat vanalarının açık olduğundan emin olun. Sirkülasyon pompasını kontrol edin. Resetleyin."
+        kod: "F05",
+        baslik: "Aşırı Isınma Emniyet Kilidi",
+        aciklama: "Kombi içindeki su sıcaklığının tehlikeli seviyeye ulaşması sonucu limit sensörünün devreyi kesmesidir.",
+        cozum: "Tesisat vanalarının açık olduğunu kontrol edin. Cihazın soğumasını bekleyip resetleyin. Arıza tekrarlarsa pompa veya ana eşanjör kontrol edilmelidir."
     },
     {
-        kod: "F.22",
-        baslik: "Isıtma Sisteminde Yetersiz Su",
-        aciklama: "Isıtma devresi su basıncı çok düşük (0.3 bar altı) veya kuru yanma riski.",
-        cozum: "Doldurma musluğunu açarak su basıncını 1.5 bar seviyesine getirin. Kaçak kontrolü yapın."
+        kod: "F06",
+        baslik: "Kalorifer Devresi Sensör Arızası",
+        aciklama: "Isıtma sistemindeki peteklerin ısınmasını sağlayan NTC sensöründe hata algılandığını bildirir.",
+        cozum: "Sensör veya kablo bağlantılarında sorun olabilir. Peteklerin sağlıklı ısınması için sensör değişimi gerekebilir."
     },
     {
-        kod: "F.27",
-        baslik: "Yalancı Alev Algılanması",
-        aciklama: "Gaz valfi kapalıyken iyonizasyon sinyali mevcut.",
-        cozum: "Elektronik kart veya iyonizasyon elektrodunu kontrol edin. Yetkili servisi arayın."
+        kod: "F07, F09",
+        baslik: "Sıcak Kullanım Suyu Sensör Hatası",
+        aciklama: "Sıcak su devresinde görev yapan sensörün arızalı olduğunu, bu nedenle kombiden sıcak su alınamadığını belirtir.",
+        cozum: "Musluklardan sıcak su akmıyorsa NTC sensörü arızalanmış olabilir. Teknik servis desteği ile parça değişimi yapılmalıdır."
     },
     {
-        kod: "F.28",
-        baslik: "Ateşleme Sırasında Arıza",
-        aciklama: "5 ateşleme denemesinden sonra alev oluşmadı.",
-        cozum: "Gaz vanasının açık olduğunu kontrol edin. Gaz giriş basıncını ölçün. Reset tuşuna basın."
+        kod: "F08",
+        baslik: "Çoklu Kalorifer Sensör Arızası",
+        aciklama: "Birden fazla kalorifer sensöründe veya sensör grubunda tutarsızlık algılandığını ifade eder.",
+        cozum: "Hangi sensörün hatalı olduğunun tespiti için uzman teknisyen müdahalesi şarttır."
     },
     {
-        kod: "F.29",
-        baslik: "İşletim Sırasında Alev Sönmesi",
-        aciklama: "Cihaz çalışırken gaz beslemesi kesildi veya iyonizasyon sinyali kararsız.",
-        cozum: "Gaz beslemesini kontrol edin. İyonizasyon elektrodunu temizleyin veya değiştirin."
+        kod: "F10",
+        baslik: "Dönüş Suyu Sıcaklık Sensör Hatası",
+        aciklama: "Tesisattan kombiye dönen suyun sıcaklığını ölçen sensörün görevini yapamadığını belirtir.",
+        cozum: "Isınma konforunu etkileyen bir durumdur; sensör ve kablo grubunun kontrolü için servis çağırılmalıdır."
     },
     {
-        kod: "F.32",
-        baslik: "Fan Arızası",
-        aciklama: "Fan hızı tolerans dışı veya fan bloke olmuş.",
-        cozum: "Fan kablo bağlantılarını kontrol edin. Gerekirse fanı değiştirin."
+        kod: "F11, F13",
+        baslik: "Anakart Haberleşme ve Devre Arızası",
+        aciklama: "Kombinin ana kartından (beyninden) sinyal alınamadığını veya kart üzerinde donanımsal sorun olduğunu gösterir.",
+        cozum: "Cihazı birkaç kez resetlemeyi deneyin. Eğer düzelme olmazsa anakart tamiri veya değişimi için teknik ekip desteği alın."
     },
     {
-        kod: "F.49",
-        baslik: "eBUS Voltaj Hatası",
-        aciklama: "Haberleşme hattında (eBUS) kısa devre veya aşırı yüklenme.",
-        cozum: "Dış hava sensörü veya oda termostatı bağlantılarını kontrol edin."
+        kod: "F12",
+        baslik: "Ekran Kartı Sinyal Hatası",
+        aciklama: "Kullanıcı arayüzü olan ekran kartından sinyal alınamadığı durumlarda beliren uyarı kodudur.",
+        cozum: "Ekran kartının onarılması veya yenisiyle değiştirilmesi gerekebilir."
     },
     {
-        kod: "F.73 - F.74",
-        baslik: "Su Basınç Sensörü Hatası",
-        aciklama: "Su basınç sensörü bağlı değil, kısa devre yapmış veya sinyal aralığı dışında.",
-        cozum: "Sensör kablo bağlantılarını kontrol edin. Gerekirse sensörü yenisiyle değiştirin."
+        kod: "F14",
+        baslik: "Yüksek Sıcaklık Uyarısı (95°C Üstü)",
+        aciklama: "Tesisat su sıcaklığının 95 dereceyi aşarak kritik seviyeye ulaştığını bildiren emniyet uyarısıdır.",
+        cozum: "Cihaza müdahale etmeden bir süre bekleyin ve soğuduktan sonra resetleyin. Derece kendiliğinden yükseliyorsa servise başvurun."
     },
     {
-        kod: "F.75",
-        baslik: "Basınç Sensörü / Pompa Algılama Hatası",
-        aciklama: "Pompa çalışmasına rağmen basınçta artış algılanmıyor.",
-        cozum: "Pompa sıkışmış olabilir veya sistemde hava var. Pompa ve sensör kontrolü yapın."
+        kod: "F15",
+        baslik: "Step Motor (Üç Yollu Vana) Hatası",
+        aciklama: "Sıcak su ve kalorifer geçişini yöneten step motorun veya üç yollu vana mekanizmasının arızalı olduğunu belirtir.",
+        cozum: "Cihaz sıcak suyu peteklere kaçırabilir. Step motor değişimi için uzman yardımı alınmalıdır."
+    },
+    {
+        kod: "F16",
+        baslik: "İyonizasyon (Sönmeyen Alev) Arızası",
+        aciklama: "Brülör sönmesine rağmen ateşleme sinyalinin devam ettiğini bildiren güvenlik hatasıdır.",
+        cozum: "İyonizasyon elektrodu veya anakart kaynaklı olabilir; güvenlik için servis müdahalesi gereklidir."
+    },
+    {
+        kod: "F17",
+        baslik: "Düşük Voltaj Hatası (170V Altı)",
+        aciklama: "Şebeke geriliminin 170 Voltun altına düşerek cihazın sağlıklı çalışmasını engellediği durumdur.",
+        cozum: "Voltaj normale dönene kadar bekleyin. Sorun sürekli tekrarlanıyorsa anakartı korumak adına regülatör kullanılması önerilir."
+    },
+    {
+        kod: "F18",
+        baslik: "Ekran Kartı Parametre Hatası",
+        aciklama: "Ekran kartında teknik sorun olduğunu veya kart ayarlarının yapılmadığını gösterir.",
+        cozum: "Yeni kart değişiminde ayar yapılması gerekir. Müdahale edilmediyse kart değişimi gerekebilir."
+    },
+    {
+        kod: "F19",
+        baslik: "Kalorifer Sensör Bağlantı Kopukluğu",
+        aciklama: "Isıtma sensörünün bağlı olmadığını veya kablo hattında kopukluk olduğunu ifade eder.",
+        cozum: "Petekler az ısınır veya hiç ısınmaz. Kablo onarımı veya sensör montajı için servis desteği alın."
+    },
+    {
+        kod: "F20",
+        baslik: "Kart Uyumsuzluk Hatası",
+        aciklama: "Ana kart ile ekran kartının birbiriyle uyum sağlamadığını veya yanlış eşleştirildiğini belirtir.",
+        cozum: "Parça değişimi sonrası ayar gereklidir. Parça değişimi yapılmadıysa elektronik kart arızası ihtimali yüksektir."
+    },
+    {
+        kod: "F21",
+        baslik: "Su Sirkülasyon Problemi",
+        aciklama: "Tesisattaki suyun dolaşımında engel olduğunu veya sirkülasyonun sağlanamadığını bildiren koddur.",
+        cozum: "Pompa arızası veya tesisat tıkanıklığı olabilir. Teknik servis müdahalesi gereklidir."
     }
 ];
 

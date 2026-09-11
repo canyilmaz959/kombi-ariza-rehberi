@@ -2,6 +2,7 @@
 
 <h2>Marka Ekle</h2>
 <form action="/marka-ekle" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <input type="text" name="name" placeholder="Marka adı" required>
     <button type="submit">Marka Ekle</button>
 </form>
@@ -10,6 +11,7 @@
 
 <h2>Model Ekle</h2>
 <form action="/model-ekle" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <input type="text" name="name" placeholder="Model adı" required>
     <select name="marka" required>
         <option value="">Marka Seç</option>
@@ -24,6 +26,7 @@
 
 <h2>Arıza Ekle</h2>
 <form action="/admin" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
     <label>Marka Seç:</label><br>
     <select name="marka" id="markaSelect" required>
@@ -54,6 +57,7 @@
 
 <h2>marka silme</h2>
 <form action="/marka-sil" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <select name="markaId" required>
         <option value="">Marka Seç</option>
         <% markalar.forEach(function(marka){ %>
@@ -65,6 +69,7 @@
 
 <h2>Model Silme</h2>
 <form action="/model-sil" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <select name="modelId" required>
         <option value="">Model Seç</option>
         <% modeller.forEach(function(m){ %>

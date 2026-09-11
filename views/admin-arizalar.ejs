@@ -13,6 +13,7 @@
 
         <button><a href="/admin/ariza-duzenle/<%= ariza._id %>">Düzenle</a></button>
         <form action="/admin/admin-arizalar/<%= ariza._id %>" method="POST" style="display:inline;">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <input type="hidden" name="arizaId" value="<%= ariza._id %>">
             <button type="submit">Sil</button>
         </form>

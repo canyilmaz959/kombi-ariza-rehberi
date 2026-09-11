@@ -1,6 +1,7 @@
 <h1>Arıza Düzenle</h1>
 
 <form action="/admin/ariza-duzenle/<%= ariza._id %>" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
     <h2><%= ariza.kod %> kodu düzenleme sayfası.</h2>
 

@@ -8,11 +8,20 @@ require('dotenv').config({ path: './.env' });
 
 const app = express();
 
+app.set('trust proxy', process.env.TRUST_PROXY === 'true');
+
 // Session ayarları
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  name: 'ariza.sid',
+  cookie: {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 1000 * 60 * 60
+  }
 }));
 
 
