@@ -1,31 +1,6 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>Kombi Hata Kodları ve Çözümleri | Tüm Markalar</title>
-</head>
-<body>
-
-<form action="/arama" method="GET">
-    <input type="text" name="q" placeholder="Model, marka veya hata kodu ara...">
-    <button type="submit">Ara</button>
-</form>
-
-<h1>Tüm Kombi Markaları İçin Hata Kodları Rehberi</h1><br><br>
-<h2>Kombi Markaları</h2>
-
-<ul>
-  <% if(markalar.length === 0){ %>
-    <li>Henüz marka eklenmemiş.</li>
-  <% } %>
-
-  <% markalar.forEach(function(marka){ %>
-    <li>
-      <a href="/markalar/<%= marka.slug %>">
-        <%= marka.name.toUpperCase() %>
-      </a>
-    </li>
-  <% }) %>
-</ul>
-
-</body>
-</html>
+<html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Kombi Hata Kodları ve Çözümleri</title><link rel="stylesheet" href="/styles.css"></head>
+<body><header class="site-header"><div class="shell nav"><a class="brand" href="/"><span class="brand-mark">A</span><span>Arıza Rehberi</span></a><nav class="nav-links"><a href="/tum-markalar">Markalar</a><a href="/tum-modeller">Modeller</a><a href="/tum-arizalar">Hata kodları</a></nav></div></header>
+<main class="shell"><section class="hero"><div><p class="eyebrow">Kombi teknik rehberi</p><h1>Sorunu kodundan bul, çözümüne ulaş.</h1><p class="lede">Marka ve modeline göre hata kodlarını, belirtilerini ve çözüm adımlarını tek yerde incele.</p><form class="search-form" action="/arama" method="GET"><input type="search" name="q" placeholder="Marka, model veya hata kodu ara..." maxlength="100"><button type="submit">Ara</button></form></div><div class="hero-panel"><span class="card-label">Hızlı başlangıç</span><h2>Önce markanı seç.</h2><p class="lede">Doğru model sayfasına geçerek cihazına ait arızaları görüntüle.</p></div></section>
+<section><div class="section-head"><div><p class="eyebrow">Katalog</p><h2>Markalar</h2></div><a class="button ghost" href="/tum-markalar">Tümünü gör</a></div><% if(markalar.length === 0){ %><div class="empty">Henüz marka eklenmemiş.</div><% } else { %><div class="card-grid"><% markalar.forEach(function(marka){ %><a class="card" href="/markalar/<%= marka.slug %>"><span class="card-label">Marka</span><h3><%= marka.name %></h3><p>Modelleri ve hata kodlarını görüntüle →</p></a><% }) %></div><% } %></section></main>
+<footer class="site-footer"><div class="shell">Arıza Rehberi · Kombi hata kodları için sade ve pratik başvuru kaynağı.</div></footer></body></html>

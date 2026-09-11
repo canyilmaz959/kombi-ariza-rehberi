@@ -1,13 +1,1 @@
-<h1>Admin Giriş</h1>
-
-<form action="/admin-login" method="POST">
-
-<input type="hidden" name="_csrf" value="<%= csrfToken %>">
-
-<input type="text" name="user" placeholder="Kullanıcı adı">
-
-<input type="password" name="pass" placeholder="Şifre">
-
-<button type="submit">Giriş</button>
-
-</form>
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Admin girişi | Arıza Rehberi</title><link rel="stylesheet" href="/styles.css"></head><body><main class="login-page"><section class="login-card"><a class="brand" href="/"><span class="brand-mark">A</span><span>Arıza Rehberi</span></a><p class="eyebrow">Yönetim alanı</p><h1 style="font-size:2.5rem">Tekrar hoş geldin.</h1><p class="lede">İçeriği güncellemek için yönetici hesabınla giriş yap.</p><form action="/admin-login" method="POST"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><label class="field"><span>Kullanıcı adı</span><input type="text" name="user" autocomplete="username" required></label><label class="field"><span>Şifre</span><input type="password" name="pass" autocomplete="current-password" required></label><button type="submit">Giriş yap</button></form></section></main></body></html>
