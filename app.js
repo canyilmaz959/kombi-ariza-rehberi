@@ -33,8 +33,9 @@ async function startServer() {
     console.log("MongoDB bağlantısı başarılı");
 
 
-    app.listen(3000, () => {
-      console.log('3000 portlu server çalıştı ( http://127.0.0.1:3000 )');
+    const port = process.env.PORT || 3000;
+    app.listen(port, () => {
+      console.log(`${port} portlu server çalıştı`);
     });
 
 
