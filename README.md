@@ -16,13 +16,17 @@ Ayrıca içeriklerin yönetilebilmesi için **oturum tabanlı bir yönetici pane
 
 ![Ana Sayfa](screenshot/anasayfa.png)
 
-### Marka Sayfası
+### Marka Listesi
 
 ![Marka Sayfası](screenshot/marka-listesi.png)
 
-### Model ve Arıza Kodları
+### Model Listesi
 
 ![Model Arıza Kodları](screenshot/model-listesi.png)
+
+### Arıza Kodları Listesi
+
+![Arıza Kodları Listesi](screenshot/hatakodlarılistesi.png)
 
 ### Arıza Detay Sayfası
 
