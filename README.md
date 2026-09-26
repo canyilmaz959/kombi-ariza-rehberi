@@ -26,7 +26,7 @@ Ayrıca içeriklerin yönetilebilmesi için **oturum tabanlı bir yönetici pane
 
 ### Arıza Detay Sayfası
 
-![Arıza Detay](screenshot/arizadetay-sayfası.png)
+![Arıza Detay](screenshot/detay-sayfası.png)
 
 ### Arama Sonuçları
 
@@ -34,7 +34,8 @@ Ayrıca içeriklerin yönetilebilmesi için **oturum tabanlı bir yönetici pane
 
 ### Yönetim Paneli
 
-![Admin Paneli](screenshot/adminpaneli1.png) (screenshot/adminpaneli2.png)
+![Admin Paneli](screenshot/adminpaneli1.png )
+![Admin Paneli2](screenshot/adminpaneli1.png )
 
 ### Arıza Düzenleme
 
