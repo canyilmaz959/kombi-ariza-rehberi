@@ -14,31 +14,31 @@ Ayrıca içeriklerin yönetilebilmesi için **oturum tabanlı bir yönetici pane
 
 ### Ana Sayfa
 
-![Ana Sayfa](screenshots/anasayfa.png)
+![Ana Sayfa](screenshot/anasayfa.png)
 
 ### Marka Sayfası
 
-![Marka Sayfası](screenshots/marka.png)
+![Marka Sayfası](screenshot/marka-listesi.png)
 
 ### Model ve Arıza Kodları
 
-![Model Arıza Kodları](screenshots/model.png)
+![Model Arıza Kodları](screenshot/model-listesi.png)
 
 ### Arıza Detay Sayfası
 
-![Arıza Detay](screenshots/ariza-detay.png)
+![Arıza Detay](screenshot/arizadetay-sayfası.png)
 
 ### Arama Sonuçları
 
-![Arama](screenshots/arama.png)
+![Arama](screenshot/arama-sayfası.png)
 
 ### Yönetim Paneli
 
-![Admin Paneli](screenshots/admin.png)
+![Admin Paneli](screenshot/adminpaneli1.png) (screenshot/adminpaneli2.png)
 
 ### Arıza Düzenleme
 
-![Arıza Düzenleme](screenshots/ariza-duzenle.png)
+![Arıza Düzenleme](screenshot/arizaduzenleme-sayfasi.png)
 
 ---
 
