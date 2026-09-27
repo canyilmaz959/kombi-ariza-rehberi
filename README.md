@@ -26,7 +26,7 @@ Ayrıca içeriklerin yönetilebilmesi için **oturum tabanlı bir yönetici pane
 
 ### Arıza Kodları Listesi
 
-![Arıza Kodları Listesi](screenshot/hatakodlarılistesi.png)
+![Arıza Kodları Listesi](screenshot/hatakodları-listesi.png)
 
 ### Arıza Detay Sayfası
 
